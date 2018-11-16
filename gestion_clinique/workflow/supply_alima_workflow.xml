@@ -1,0 +1,335 @@
+<odoo>
+	<data>
+        
+        <record model="workflow" id="wkf_supply_alima_request_quotation">
+            <field name="name">Supply ALIMA workflow request quotation</field>
+            <field name="osv">purchase.order</field>
+            <field name="on_create">True</field>
+        </record>
+        
+        <!-- Activity -->
+        
+        <!-- start workflow -->
+        <record model="workflow.activity" id="draft">
+            <field name="name">Draft</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="flow_start" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">action_draft()</field>
+        </record>
+
+        <!-- <record model="workflow.activity" id="test">
+            <field name="name">test</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="flow_start" eval="True"/>
+            <field name="condition">categorie == 'cellule'</field>
+            <field name="kind">function</field>
+            <field name="action">action_validation_admin_fin()</field>
+        </record> -->
+        
+        <record model="workflow.activity" id="validation_med_ref">
+            <field name="name">Validation Med Ref</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_med_ref()</field>
+        </record>
+        <record model="workflow.activity" id="validation_log_projet">
+            <field name="name">Validation Log Projet</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_log_projet()</field>
+        </record>
+        <record model="workflow.activity" id="validation_admin_fin">
+            <field name="name">validation Admin Fin</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_admin_fin()</field>
+        </record>
+        <record model="workflow.activity" id="validation_rp">
+            <field name="name">Validation RP</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_rp()</field>
+        </record>
+        <!-- COORDINATION -->
+        <record model="workflow.activity" id="validation_comed">
+            <field name="name">Validation Comed</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_comed()</field>
+        </record>
+        <record model="workflow.activity" id="validation_colog">
+            <field name="name">Validation Colog</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_colog()</field>
+        </record>
+        <record model="workflow.activity" id="validation_cofin">
+            <field name="name">Validation Cofin</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_cofin()</field>
+        </record>
+        <record model="workflow.activity" id="validation_cdm">
+            <field name="name">Validation CDM</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_cdm()</field>
+        </record>
+        <!-- SIEGE -->
+        <record model="workflow.activity" id="validation_med_desk">
+            <field name="name">Validation Med DESK</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_med_desk()</field>
+        </record>
+        <record model="workflow.activity" id="validation_log_desk">
+            <field name="name">Validation Log DESK</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_log_desk()</field>
+        </record>
+        <record model="workflow.activity" id="validation_rgt">
+            <field name="name">Validation RGT</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_rgt()</field>
+        </record>
+        <record model="workflow.activity" id="validation_rp_siege">
+            <field name="name">Validation RP siege</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_validation_rp_siege()</field>
+        </record>
+
+
+        <!-- CONFIRMATION -->
+        <record model="workflow.activity" id="a_confirmer">
+            <field name="name">A confirmer</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="kind">function</field>
+            <field name="action">action_a_confirmer()</field>
+        </record>
+        <record model="workflow.activity" id="confirmer">
+            <field name="name">Confirmer</field>
+            <field name="wkf_id" ref="wkf_supply_alima_request_quotation"/>
+            <field name="flow_stop" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">action_confirmer_order()</field>
+        </record>
+
+        <!-- transition -->
+        <record model="workflow.transition" id="supply_alima_auto_confirm_draft_to_med_ref">
+            <field name="act_from" ref="draft"/>
+            <field name="act_to" ref="validation_med_ref"/>
+            <field name="condition">type_commande == 'medical' and categorie == 'projet'</field>
+            <field name="signal">draft</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_med_ref">
+            <field name="act_from" ref="validation_med_ref"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_med_ref</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_log_projet">
+            <field name="act_from" ref="validation_log_projet"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_log_projet</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_admin_fin">
+            <field name="act_from" ref="validation_admin_fin"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_admin_fin</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_rp">
+            <field name="act_from" ref="validation_rp"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_rp</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_comed">
+            <field name="act_from" ref="validation_comed"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_comed</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_colog">
+            <field name="act_from" ref="validation_colog"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_colog</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_cofin">
+            <field name="act_from" ref="validation_cofin"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_cofin</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_cdm">
+            <field name="act_from" ref="validation_cdm"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_cdm</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_med_desk">
+            <field name="act_from" ref="validation_med_desk"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_med_desk</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_log_desk">
+            <field name="act_from" ref="validation_log_desk"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_log_desk</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_rgt">
+            <field name="act_from" ref="validation_rgt"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_rgt</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_annulation_rp_siege">
+            <field name="act_from" ref="validation_rp_siege"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">annulation_rp_siege</field>
+        </record>
+
+
+
+        <record model="workflow.transition" id="supply_alima_auto_confirm_draft_to_log_projet">
+            <field name="act_from" ref="draft"/>
+            <field name="act_to" ref="validation_log_projet"/>
+            <field name="condition">type_commande == 'logistique' and categorie == 'projet'</field>
+            <field name="signal">draft</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_auto_confirm_draft_to_comed">
+            <field name="act_from" ref="draft"/>
+            <field name="act_to" ref="validation_comed"/>
+            <field name="condition">type_commande == 'medical' and categorie == 'mission'</field>
+            <field name="signal">draft</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_auto_confirm_draft_to_colog">
+            <field name="act_from" ref="draft"/>
+            <field name="act_to" ref="validation_colog"/>
+            <field name="condition">type_commande == 'logistique' and categorie == 'mission'</field>
+            <field name="signal">draft</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_auto_confirm_draft_to_med_desk">
+            <field name="act_from" ref="draft"/>
+            <field name="act_to" ref="validation_med_desk"/>
+            <field name="condition">type_commande == 'medical' and categorie == 'cellule'</field>
+            <field name="signal">draft</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_auto_confirm_draft_to_log_desk">
+            <field name="act_from" ref="draft"/>
+            <field name="act_to" ref="validation_log_desk"/>
+            <field name="condition">type_commande == 'logistique' and categorie == 'cellule'</field>
+            <field name="signal">draft</field>
+        </record>
+        
+        
+        <record model="workflow.transition" id="supply_alima_med_ref_to_admin_fin">
+            <field name="act_from" ref="validation_med_ref"/>
+            <field name="act_to" ref="validation_admin_fin"/>
+            <field name="signal">med_ref_admin_fin</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_log_projet_to_admin_fin">
+            <field name="act_from" ref="validation_log_projet"/>
+            <field name="act_to" ref="validation_admin_fin"/>
+            <field name="signal">log_projet_admin_fin</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_admin_fin_to_rp">
+            <field name="act_from" ref="validation_admin_fin"/>
+            <field name="act_to" ref="validation_rp"/>
+            <field name="signal">rp</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_rp_to_a_confirmer">
+            <field name="act_from" ref="validation_rp"/>
+            <field name="act_to" ref="a_confirmer"/>
+            <field name="condition">amount_total &lt;= 2000</field>
+            <field name="signal">a_confirmer</field>
+        </record>
+
+        <!-- Montant total > 2000 -->
+        <record model="workflow.transition" id="supply_alima_auto_confirm_rp_to_comed">
+            <field name="act_from" ref="validation_rp"/>
+            <field name="act_to" ref="validation_comed"/>
+            <field name="condition">amount_total &gt; 2000 and type_commande == 'medical'</field>
+            <field name="signal">a_confirmer</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_auto_confirm_rp_to_colog">
+            <field name="act_from" ref="validation_rp"/>
+            <field name="act_to" ref="validation_colog"/>
+            <field name="condition">amount_total &gt; 2000 and type_commande == 'logistique'</field>
+            <field name="signal">a_confirmer</field>
+        </record>
+
+        <record model="workflow.transition" id="supply_alima_comed_to_cofin">
+            <field name="act_from" ref="validation_comed"/>
+            <field name="act_to" ref="validation_cofin"/>
+            <field name="signal">comed_cofin</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_colog_to_cofin">
+            <field name="act_from" ref="validation_colog"/>
+            <field name="act_to" ref="validation_cofin"/>
+            <field name="signal">colog_cofin</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_cofin_to_cdm">
+            <field name="act_from" ref="validation_cofin"/>
+            <field name="act_to" ref="validation_cdm"/>
+            <field name="signal">cdm</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_cdm_to_a_confirmer">
+            <field name="act_from" ref="validation_cdm"/>
+            <field name="act_to" ref="a_confirmer"/>
+            <field name="condition">amount_total &lt;= 10000</field>
+            <field name="signal">a_confirmer_cdm</field>
+        </record>
+
+        <!-- Montant total > 10000 -->
+        <record model="workflow.transition" id="supply_alima_auto_confirm_cdm_to_med_desk">
+            <field name="act_from" ref="validation_cdm"/>
+            <field name="act_to" ref="validation_med_desk"/>
+            <field name="condition">amount_total &gt; 10000 and type_commande == 'medical'</field>
+            <field name="signal">a_confirmer_cdm</field>
+        </record>
+        
+        <record model="workflow.transition" id="supply_alima_auto_confirm_cdm_to_log_desk">
+            <field name="act_from" ref="validation_cdm"/>
+            <field name="act_to" ref="validation_log_desk"/>
+            <field name="condition">amount_total &gt; 10000 and type_commande == 'logistique'</field>
+            <field name="signal">a_confirmer_cdm</field>
+        </record>
+
+        <record model="workflow.transition" id="supply_alima_med_desk_to_rgt">
+            <field name="act_from" ref="validation_med_desk"/>
+            <field name="act_to" ref="validation_rgt"/>
+            <field name="signal">med_desk_rgt</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_colog_to_rgt">
+            <field name="act_from" ref="validation_log_desk"/>
+            <field name="act_to" ref="validation_rgt"/>
+            <field name="signal">log_desk_rgt</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_rgt_to_rp_siege">
+            <field name="act_from" ref="validation_rgt"/>
+            <field name="act_to" ref="validation_rp_siege"/>
+            <field name="signal">rp_siege</field>
+        </record>
+        <record model="workflow.transition" id="supply_alima_rp_siege_to_a_confirmer">
+            <field name="act_from" ref="validation_rp_siege"/>
+            <field name="act_to" ref="a_confirmer"/>
+            <field name="signal">a_confirmer_siege</field>
+        </record>
+
+
+
+
+        
+        <!-- Conditional transition -->
+        <record model="workflow.transition" id="supply_alima_auto_confirm_commande">
+            <field name="act_from" ref="a_confirmer"/>
+            <field name="act_to" ref="confirmer"/>
+            <field name="condition">state == 'purchase'</field>
+        </record>
+        
+        <!-- <record model="workflow.transition" id="supply_alima_a_confirmer_to_med_ref">
+            <field name="act_from" ref="confirmer"/>
+            <field name="act_to" ref="draft"/>
+            <field name="signal">reset_to_draft</field>
+        </record> -->
+
+	</data>
+</odoo>

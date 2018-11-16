@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Top menu item -->
+        <menuitem name="Clinique"
+            id="menu_gestion_clinique_root"
+            web_icon="gestion_clinique,static/description/icon.png"
+            sequence="25"/>
+
+        <menuitem id="menu_gestion_clinique" name="Gestion Clinique"
+            parent="menu_gestion_clinique_root" sequence="1" />
+        
+        <menuitem id="menu_recette_depense" name="Recette/Depense"
+            parent="menu_gestion_clinique_root" sequence="2" />
+
+        <menuitem id="menu_gestion_clinique_conf" name="Configuration"
+            parent="menu_gestion_clinique_root" sequence="4" groups="gestion_clinique.gestion_clinique_group_dentiste"/>
+
+        <!-- Consultation menu -->
+        <record id="action_gestion_clinique_patient" model="ir.actions.act_window">
+            <field name="name">Consultation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">gestion.clinique.patient</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_filter_to_purchase":1}</field>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new consultation.
+              </p>
+            </field>
+        </record>
+
+        <!-- Consultation form -->
+        <record id="gestion_clinique_patient_form" model="ir.ui.view">
+            <field name="name">gestion.clinique.patient.form</field>
+            <field name="model">gestion.clinique.patient</field>
+            <field name="arch" type="xml">
+                <form string="Consultation">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="patient_info_id"/>
+                                <field name="motif_consultation"/>
+                                <field name="femme_enceinte"/>
+                            </group>
+                            <group>
+                                <field name="date_consultation" readonly="1"/>
+                                <field name="antecedents"/>
+                                <field name="observation"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Diagnostic">
+                                <field name="diagnostic_ids">
+                                    <form>
+                                        <group>
+                                            <field name="type"/>
+                                            <field name="nom"/>
+                                        </group>
+                                    </form>
+                                    <tree >
+                                        <field name="type"/>
+                                        <field name="nom"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Traitement">
+                                <field name="traitement_ids">
+                                    <form>
+                                        <group>
+                                            <field name="type"/>
+                                            <field name="nom"/>
+                                        </group>
+                                    </form>
+                                    <tree >
+                                        <field name="type"/>
+                                        <field name="nom"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Patient RDV">
+                                <field name="patient_rdv_ids">
+                                    <form>
+                                        <group>
+                                            <field name="currency_id" invisible="1"/>
+                                            <field name="sequence_rdv"/>
+                                            <field name="date_rdv"/>
+                                            <field name="avance"/>
+                                            <field name="reste"/>
+                                        </group>
+                                    </form>
+                                    <tree >
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="sequence_rdv"/>
+                                        <field name="date_rdv"/>
+                                        <field name="avance"/>
+                                        <field name="reste"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Radiographie">
+                                <field name="radiographie_ids">
+                                    <form>
+                                        <group>
+                                            <field name="lien"/>
+                                            <field name="nom"/>
+                                            <field name="commentaire"/>
+                                        </group>
+                                    </form>
+                                    <tree >
+                                        <field name="lien" widget="url"/>
+                                        <field name="nom"/>
+                                        <field name="commentaire"/>
+                                    </tree>
+                                </field>
+                            </page>    
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Consultation tree -->
+        <record id="gestion_clinique_patient_tree" model="ir.ui.view">
+            <field name="name">gestion.clinique.patient.tree</field>
+            <field name="model">gestion.clinique.patient</field>
+            <field name="arch" type="xml">
+                <tree string="Consultation" limit="80">
+                    <field name="patient_info_id" />
+                    <field name="date_consultation"/>
+                    <field name="diagnostic_ids"/>
+                    <field name="traitement_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Patient menu -->
+        <record id="action_gestion_clinique_patient_info" model="ir.actions.act_window">
+            <field name="name">Patient</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">gestion.clinique.patient.info</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{"search_default_filter_to_purchase":1}</field>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new patient.
+              </p>
+            </field>
+        </record>
+
+        <!-- Patient form -->
+        <record id="gestion_clinique_patient_info_form" model="ir.ui.view">
+            <field name="name">gestion.clinique.patient.info.form</field>
+            <field name="model">gestion.clinique.patient.info</field>
+            <field name="arch" type="xml">
+                <form string="Patient">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="sequence" readonly="1"/>
+                                <field name="name"/>
+                                <field name="firstname"/>
+                                <field name="sexe"/>
+                            </group>
+                            <group>
+                                <field name="age"/>
+                                <field name="adresse"/>
+                                <field name="numero_telephone"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="gestion_clinique_patient_info_kanban" model="ir.ui.view">
+            <field name="model">gestion.clinique.patient.info</field>
+                <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <strong>
+                                    Code Patient: <a type="open"><field name="sequence" /></a>
+                                <ul>
+                                    <li>name: <field name="name" /></li>
+                                    <li>Prénom: <field name="firstname" /></li>
+                                    <li>Telephone: <field name="numero_telephone"/></li>
+                                </ul>
+                                </strong>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <!-- Patient tree -->
+        <record id="gestion_clinique_patient_info_tree" model="ir.ui.view">
+            <field name="name">gestion.clinique.patient.info.tree</field>
+            <field name="model">gestion.clinique.patient.info</field>
+            <field name="arch" type="xml">
+                <tree string="Patient" limit="80">
+                    <field name="sequence" />
+                    <field name="name" />
+                    <field name="firstname" />
+                    <field name="numero_telephone"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Diagnostic -->
+        <record id="action_gestion_clinique_diagnostic" model="ir.actions.act_window">
+            <field name="name">Diagnostic</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">gestion.clinique.diagnostic</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_filter_to_purchase":1}</field>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new diagnostic.
+              </p>
+            </field>
+        </record>
+
+        <!-- gestion.clinique.diagnostic tree -->
+        <record id="gestion_clinique_diagnostic_tree" model="ir.ui.view">
+            <field name="name">gestion.clinique.diagnostic.tree</field>
+            <field name="model">gestion.clinique.diagnostic</field>
+            <field name="arch" type="xml">
+                <tree string="liste diagnostic" limit="80">
+                    <field name="type" />
+                    <field name="nom" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Traitement -->
+        <record id="action_gestion_clinique_traitement" model="ir.actions.act_window">
+            <field name="name">traitement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">gestion.clinique.traitement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_filter_to_purchase":1}</field>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new traitement.
+              </p>
+            </field>
+        </record>
+
+        <!-- gestion.clinique.traitement tree -->
+        <record id="gestion_clinique_traitement_tree" model="ir.ui.view">
+            <field name="name">gestion.clinique.traitement.tree</field>
+            <field name="model">gestion.clinique.traitement</field>
+            <field name="arch" type="xml">
+                <tree string="liste traitement" limit="80">
+                    <field name="type" />
+                    <field name="nom" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Recette depense menu -->
+        <record id="action_recette_depense" model="ir.actions.act_window">
+            <field name="name">Recette Depense</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">recette.depense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_filter_to_purchase":1}</field>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new Recette Depense.
+              </p>
+            </field>
+        </record>
+
+        <!-- Recette Depense tree -->
+        <record id="recette_depense_tree" model="ir.ui.view">
+            <field name="name">recette.depense.tree</field>
+            <field name="model">recette.depense</field>
+            <field name="arch" type="xml">
+                <tree string="liste Recette/Depense" limit="80">
+                    <field name="type" />
+                    <field name="date"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="montant"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Recette Depense form -->
+        <record id="recette_depense_form" model="ir.ui.view">
+            <field name="name">recette.depense.form</field>
+            <field name="model">recette.depense</field>
+            <field name="arch" type="xml">
+                <form string="Recette/Depense">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="type"/>
+                                <field name="filtre" invisible="1"/>
+                                <field name="filtre_com" invisible="1"/>
+                                <field name="type_recette" attrs="{'invisible': [('filtre', '!=', 1)], 'required': [('filtre', '=', 1)]}"/>
+                                <field name="type_depense" attrs="{'invisible': [('filtre', '!=', 2)], 'required': [('filtre', '=', 2)]}"/>
+                                <field name="commentaire" attrs="{'invisible': [('filtre_com', '!=', 2)]}"/>
+                            </group>
+                            <group>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="date"/>
+                                <field name="montant"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Amount recette depense menu -->
+        <record id="action_amount_recette_depense" model="ir.actions.act_window">
+            <field name="name">Amount Recette Depense</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">amount.recette.depense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_filter_to_purchase":1}</field>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new Amount Recette Depense.
+              </p>
+            </field>
+        </record>
+
+        <!-- Amount Recette Depense form -->
+        <record id="amount_recette_depense_form" model="ir.ui.view">
+            <field name="name">amount.recette.depense.form</field>
+            <field name="model">amount.recette.depense</field>
+            <field name="arch" type="xml">
+                <form string="Amount">
+                    <header>
+                        <button 
+                            string="Envoyer Recette Depense"
+                            name="action_send_rd" 
+                            type="object"
+                            class="oe_highlight"
+                        />
+                        <button 
+                            string="Imprimer Recette Depense"
+                            name="action_print_rd" 
+                            type="object"
+                            class="oe_highlight"
+                        />
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="mois"/>
+                        </group>
+                        <notebook>
+                            <page string="Recette/Depense">
+                                <field name="recette_depense_ids">
+                                    <tree >
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="type" />
+                                        <field name="date"/>
+                                        <field name="montant"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="amount_recette" readonly="1" string="Recettes"/>
+                                    <field name="amount_depense" readonly="1" string="Dépenses"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="solde"/>
+                                    </div>
+                                    <field name="solde" readonly="1" nolabel="1" class="oe_subtotal_footer_separator"/>
+                                </group>
+                                <div class="oe_clear"/>
+                            </page>   
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Amount Recette Depense tree -->
+        <record id="amount_recette_depense_tree" model="ir.ui.view">
+            <field name="name">amount.recette.depense.tree</field>
+            <field name="model">amount.recette.depense</field>
+            <field name="arch" type="xml">
+                <tree string="liste Amount Recette/Depense" limit="80">
+                    <field name="mois" />
+                    <field name="currency_id" invisible="1"/>
+                    <field name="amount_recette"/>
+                    <field name="amount_depense"/>
+                    <field name="solde"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Mes rendez vous menu -->
+        <record id="action_gestion_clinique_mes_rendez_vous" model="ir.actions.act_window">
+            <field name="name">Mes rendez vous</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mes.rendez.vous</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_filter_to_purchase":1}</field>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new Rendez vous.
+              </p>
+            </field>
+        </record>
+
+        <!-- Mes rendez vous form -->
+        <record id="gestion_clinique_mes_rendez_vous_form" model="ir.ui.view">
+            <field name="name">mes.rendez.vous.form</field>
+            <field name="model">mes.rendez.vous</field>
+            <field name="arch" type="xml">
+                <form string="Amount">
+                    <header>
+                        <button 
+                            string="Mes rendez-vous"
+                            name="action_mes_rendez_vous" 
+                            type="object"
+                            class="oe_highlight"
+                        />
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="date" readonly="1"/>
+                        </group>
+                        <notebook>
+                            <page string="RDV">
+                                <field name="patient_rdv_ids" readonly="1">
+                                    <tree>
+                                        <field name="patient_id"/>
+                                        <field name="sequence_rdv"/>
+                                    </tree>
+                                </field>
+                            </page>   
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- mes rendez vous tree -->
+        <record id="gestion_clinique_mes_rendez_vous_form_tree" model="ir.ui.view">
+            <field name="name">mes.rendez.vous.tree</field>
+            <field name="model">mes.rendez.vous</field>
+            <field name="arch" type="xml">
+                <tree string="" limit="1">
+                    <field name="date" />
+                </tree>
+            </field>
+        </record>
+
+        <!--Clinique menu-->
+        <menuitem 
+            id="menu_gestion_clinique_patient_info" name="Patient"
+            parent="menu_gestion_clinique"
+            action="action_gestion_clinique_patient_info" sequence="0"
+        />
+
+        <menuitem 
+            id="menu_gestion_clinique_patient" name="Consultation"
+            parent="menu_gestion_clinique"
+            action="action_gestion_clinique_patient" sequence="1"
+            groups="gestion_clinique.gestion_clinique_group_dentiste"
+        />
+
+        <!--Recette/Depense-->
+        <menuitem 
+            id="menu_recette_depense_item" name="Recette/Depense"
+            parent="menu_recette_depense"
+            action="action_recette_depense" sequence="0"
+        />
+        <menuitem 
+            id="menu_amount_recette_depense" name="Amount"
+            parent="menu_recette_depense"
+            action="action_amount_recette_depense" sequence="1"
+            groups="gestion_clinique.gestion_clinique_group_dentiste"
+        />
+
+        <!--Configuration menu-->
+        <menuitem 
+            id="menu_gestion_clinique_diagnostic" name="Diagnostic"
+            parent="menu_gestion_clinique_conf"
+            action="action_gestion_clinique_diagnostic" sequence="1"
+        />
+
+        <menuitem 
+            id="menu_gestion_clinique_traitement" name="Traitement"
+            parent="menu_gestion_clinique_conf"
+            action="action_gestion_clinique_traitement" sequence="2"
+        />
+
+        <!-- Mes rendez vous -->
+        <menuitem id="menu_gestion_clinique_mes_rendez_vous" name="Mes Rendez Vous"
+            parent="menu_gestion_clinique_root" sequence="3" action="action_gestion_clinique_mes_rendez_vous"/>        
+
+
+
+</odoo>

@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gestion_clinique_patient,access_gestion_clinique_patient,model_gestion_clinique_patient,,1,1,1,1
+access_gestion_clinique_patient_info,access_gestion_clinique_patient_info,model_gestion_clinique_patient_info,,1,1,1,1
+access_gestion_clinique_patient_rdv,access_gestion_clinique_patient_rdv,model_gestion_clinique_patient_rdv,,1,1,1,1
+access_gestion_clinique_radiographie,access_gestion_clinique_radiographie,model_gestion_clinique_radiographie,,1,1,1,1
+access_gestion_clinique_diagnostic,access_gestion_clinique_diagnostic,model_gestion_clinique_diagnostic,,1,1,1,1
+access_gestion_clinique_traitement,access_gestion_clinique_traitement,model_gestion_clinique_traitement,,1,1,1,1
+access_recette_depense,access_recette_depense,model_recette_depense,,1,1,1,1
+access_amount_recette_depense,access_amount_recette_depense,model_amount_recette_depense,,1,1,1,1
+access_mes_rendez_vous,access_mes_rendez_vous,model_mes_rendez_vous,,1,1,1,1
+

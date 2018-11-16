@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+        <report 
+            string="Recette Depense" 
+            id="report_recette_depense" 
+            model="amount.recette.depense" 
+            report_type="qweb-pdf"
+            menu="False"
+            name="gestion_clinique.report_recettedepense" 
+            file="gestion_clinique.report_recettedepense"
+        />
+</odoo>
